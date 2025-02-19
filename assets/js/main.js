@@ -227,3 +227,29 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
+
+document.querySelector(".php-email-form").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevent default form submission
+
+  let form = this;
+  let formData = new FormData(form);
+
+  fetch("forms/contact.php", {
+      method: "POST",
+      body: formData
+  })
+  .then(response => response.text())
+  .then(result => {
+      if (result.trim() === "success") {
+          document.querySelector(".sent-message").style.display = "block"; // Show success message
+          form.reset();
+          setTimeout(() => {
+              window.location.href = "http://localhost:8080/#contact"; // Redirect after 1 seconds
+          }, 1000);
+      } else {
+          document.querySelector(".error-message").innerHTML = "Failed to send message. Please try again.";
+          document.querySelector(".error-message").style.display = "block";
+      }
+  })
+  .catch(error => console.error("Error:", error));
+});
